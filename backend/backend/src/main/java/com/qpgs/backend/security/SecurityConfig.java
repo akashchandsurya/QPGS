@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @Configuration
@@ -37,48 +38,110 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userDetailsService);
+
         provider.setPasswordEncoder(passwordEncoder());
+
         return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
+
         return config.getAuthenticationManager();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "https://qpgs-frontend.vercel.app"
+        ));
+
+        config.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
+
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http)
+            throws Exception {
+
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(cors ->
+                        cors.configurationSource(corsConfigurationSource())
+                )
+
+                .csrf(csrf ->
+                        csrf.disable()
+                )
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
+                )
+
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "admin", "ROLE_ADMIN")
-                        .requestMatchers("/api/subjects/**", "/api/questions/**", "/api/papers/**").hasAnyAuthority("ADMIN", "admin", "FACULTY", "faculty", "ROLE_ADMIN", "ROLE_FACULTY")
-                        .anyRequest().authenticated()
+
+                        .requestMatchers("/api/admin/**")
+                        .hasAnyAuthority(
+                                "ADMIN",
+                                "admin",
+                                "ROLE_ADMIN"
+                        )
+
+                        .requestMatchers(
+                                "/api/subjects/**",
+                                "/api/questions/**",
+                                "/api/papers/**"
+                        )
+                        .hasAnyAuthority(
+                                "ADMIN",
+                                "admin",
+                                "FACULTY",
+                                "faculty",
+                                "ROLE_ADMIN",
+                                "ROLE_FACULTY"
+                        )
+
+                        .anyRequest()
+                        .authenticated()
                 )
+
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+                .addFilterBefore(
+                        jwtAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
