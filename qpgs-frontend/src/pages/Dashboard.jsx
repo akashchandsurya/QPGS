@@ -5,7 +5,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "https://qpgs-backend.onrender.com";
 const DIFFICULTY_COLORS = { EASY: "#2F6B3A", MEDIUM: "#B8863B", HARD: "#B3441E" };
 const SUBJECT_BAR_COLOR = "#1B2A4A";
 

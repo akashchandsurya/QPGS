@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "https://qpgs-backend.onrender.com";
 
 export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState("");

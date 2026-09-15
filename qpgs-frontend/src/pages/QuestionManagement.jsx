@@ -3,7 +3,7 @@ import axios from "axios";
 import { useToast } from "../context/ToastContext";
 import BulkUploadPanel from "../components/BulkUploadPanel";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "https://qpgs-backend.onrender.com";
 const DIFFICULTIES = ["EASY", "MEDIUM", "HARD"];
 
 const emptyForm = { questionText: "", subject: "", topic: "", difficultyLevel: "EASY", marks: "" };
