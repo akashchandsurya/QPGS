@@ -10,7 +10,7 @@ import SubjectManagement from "./pages/SubjectManagement";
 import PaperGeneration from "./pages/PaperGeneration";
 import ManageUsers from "./pages/ManageUsers";
 
-const API_BASE = "https://qpgs-backend.onrender.com";
+const API_BASE = "http://localhost:8080";
 // Access token lasts 1 hour on the backend - refresh a bit before it expires.
 const REFRESH_INTERVAL_MS = 50 * 60 * 1000; // 50 minutes
 
